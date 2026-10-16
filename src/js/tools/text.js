@@ -7,7 +7,6 @@ import Base_layers_class from './../core/base-layers.js';
 import GUI_tools_class from './../core/gui/gui-tools.js';
 import Helper_class from './../libs/helpers.js';
 import Dialog_class from './../libs/popup.js';
-import WebFont from 'webfontloader';
 import alertify from './../../../node_modules/alertifyjs/build/alertify.min.js';
 
 /**
@@ -49,25 +48,20 @@ fontLoadMap.set('Tahoma', true);
 fontLoadMap.set('Times New Roman', true);
 fontLoadMap.set('Verdana', true);
 
-function load_font_family({ family, variants }, successCallback) {
+// Font search offers system fonts only (macOS / Windows).
+// No Google Fonts calls: they are blocked in China, where this editor is also used.
+const SYSTEM_FONTS = ['Arial', 'Arial Black', 'Helvetica', 'Helvetica Neue', 'Futura', 'Avenir Next', 'Gill Sans',
+	'Optima', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Georgia', 'Times New Roman', 'Didot', 'Courier New', 'Menlo',
+	'Impact', 'DIN Alternate', 'DIN Condensed', 'Rockwell', 'Copperplate'].map((family) => ({ family }));
+
+function load_font_family({ family }, successCallback) {
 	if (fontLoadMap.get(family) == null) {
 		fontLoadMap.set(family, false);
-		const loadPromise = new Promise((resolve, reject) => {
-			WebFont.load({
-				google: {
-					families: [family + (variants ? ':' + variants.join(',') : '')]
-				},
-				fontactive: (family) => {
-					fontLoadMap.set(family, true);
-					fontLoadPromiseMap.delete(family);
-					resolve();
-				},
-				fontinactive: (family) => {
-					alertify.error('Font ' + family + ' could not be loaded.');
-					fontLoadPromiseMap.delete(family);
-					reject();
-				}
-			});
+		// document.fonts only resolves system fonts and @font-face rules served by this site.
+		// A font missing from the computer falls back to the browser default, like any system font.
+		const loadPromise = document.fonts.load(`16px "${family}"`).then(() => {
+			fontLoadMap.set(family, true);
+			fontLoadPromiseMap.delete(family);
 		});
 		fontLoadPromiseMap.set(family, loadPromise);
 	}
@@ -1977,14 +1971,9 @@ class Google_fonts_search_class {
 					}
 				});
 
-				const apiKey = config.google_webfonts_key;
-				$.getJSON(`https://www.googleapis.com/webfonts/v1/webfonts?key=${apiKey}&sort=popularity`, (data) => {
-					this.fontList = data.items;
-					this.fontListFiltered = data.items;
-					this.render_font_list();
-				}).fail(function () {
-					alertify.error('Error loading the list of fonts from Google.');
-				});
+				this.fontList = SYSTEM_FONTS;
+				this.fontListFiltered = SYSTEM_FONTS;
+				this.render_font_list();
 			},
 			on_finish: () => {
 				this.popup = null;

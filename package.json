@@ -41,11 +41,10 @@
     "file-saver": "^2.0.5",
     "fuzzysort": "^1.1.4",
     "gif.js.optimized": "^1.0.1",
-    "hermite-resize": "git+https://github.com/viliusle/Hermite-resize.git",
+    "hermite-resize": "file:vendor/hermite-resize",
     "jquery": "^3.5.1",
     "pica": "^7.0.0",
     "semver-compare": "^1.0.0",
-    "uuid": "^8.3.2",
-    "webfontloader": "^1.6.28"
+    "uuid": "^8.3.2"
   }
 }

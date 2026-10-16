@@ -1,3 +1,11 @@
+> **Yumi-Lab fork.** Differences from upstream:
+> - no runtime calls to Google: the text tool uses system fonts only (no `webfontloader`, no Google Fonts list),
+>   so the editor works where Google is blocked;
+> - `hermite-resize` is vendored in `vendor/` because npm 12 refuses git dependencies.
+>
+> Build: `npm install && npm run build`, then serve the repository root with any static server
+> (`python3 -m http.server 8095`). A project opens from a URL: `/?image=path/to/project.json`.
+
 # miniPaint
 
 Online image editor lets you create and edit images using HTML5 technologies. No need to buy, download, install, or have outdated flash. No ads. Key features: layers, filters, open source Photoshop alternative.

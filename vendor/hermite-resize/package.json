@@ -1,0 +1,7 @@
+{
+  "name": "hermite-resize",
+  "version": "2.2.10",
+  "description": "Vendored copy of github.com/viliusle/Hermite-resize (MIT), npm 12 refuses git dependencies",
+  "license": "MIT",
+  "main": "dist/hermite.npm.js"
+}
